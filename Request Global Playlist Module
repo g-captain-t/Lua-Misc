@@ -1,0 +1,10 @@
+module = {
+    AllowedPlayers = {"Blackpink"; 080816;}; --Who can fire the request music remote? (usernames and/or ID)
+    playlists = {
+            
+        templateplaylist = {0000000, 00000000}; -- Fill with as many music ids as you want
+        JazzRnB = {0000000, 0000000};
+        
+    }
+}
+return module
