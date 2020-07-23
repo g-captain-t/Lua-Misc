@@ -1,0 +1,29 @@
+--LocalScript inside GUI
+
+local playremote = game:GetService("ReplicatedStorage"):WaitForChild("PlayMusicRemote")
+local stopmusic = game:GetService("ReplicatedStorage"):WaitForChild("StopMusicRemote")
+
+Instance.new("Sound").Parent = script
+local defaultvolume = script.Sound.Volume
+
+--local Mutemusic = script.Parent.MuteButton
+
+playremote.OnClientEvent:Connect(function(playlist)
+    print(#playlist, "tracks in this playlist")
+    for count=1,#playlist do
+        script.Sound.SoundId ="rbxassetid://"..tostring(playlist[count])
+        script.Sound:Play()
+        script.Sound.Ended:Wait()
+    end
+    
+    --[[Mutemusic.MouseButton1Click:Connect(function()
+        script.Sound.Volume = defaultvolume
+    end)]]
+    
+    stopmusic.OnClientEvent:Connect(function()
+        script.Sound:Stop()
+        script.Sound.SoundId = ""
+        return -- breaks the function
+    end)
+    
+end)
