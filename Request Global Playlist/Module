@@ -8,3 +8,19 @@ module = {
     }
 }
 return module
+
+
+--[[You only need to modify the modulescript
+This is a module made to play continous playlist globally. Feel free to modify this to your own needs, including paid request systems, self-playing server module, client-only playlist, etc.
+
+To use, simply fire the three remotes: PlayMusicRemote, StopMusicRemote, and RequestMusicRemote, passing the player and the playlist name in string. You can do this from a GUI admin panel, a console, a chat command, etc. For firing from GUIs, I suggest passing on the localplayer and button.Name.
+
+    Hierarchy:
+    ModuleScript
+        >Server Script
+        >GlobalMusicGUI - Or put this in StarterGui and delete the serverscript function at line 45-49
+            >LocalScript
+            >MuteButton (optional)
+
+scripted by g_captain
+]]
