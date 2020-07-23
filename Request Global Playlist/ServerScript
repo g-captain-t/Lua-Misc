@@ -1,0 +1,22 @@
+local module = require(script.Parent)
+
+local requestremote = Instance.new("RemoteEvent")
+    requestremote.Parent = game:GetService("ReplicatedStorage") requestremote.Name = "RequestMusicRemote"
+local playremote = Instance.new("RemoteEvent")
+    playremote.Parent = game:GetService("ReplicatedStorage") playremote.Name = "PlayMusicRemote"
+local stopremote = Instance.new("RemoteEvent")
+    stopremote.Parent = game:GetService("ReplicatedStorage") stopremote.Name = "StopMusicRemote"
+
+local sound = Instance.new("Sound") sound.Parent = script
+local playingplaylist
+local requestedplaylist
+
+function HasPermissions(theplayer)
+    for _, allowedplr in pairs (module.Admins) do
+        if theplayer.UserId == tostring(allowedplr) then
+            return true
+         elseif theplayer.Name == tostring(allowedplr) then
+            return true
+        end
+    end
+end
