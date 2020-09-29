@@ -4,9 +4,11 @@ local Seat = Main.Parent.VehicleSeat
 local Settings = Seat.SETTINGS
 
 local maxThrottle = Settings.MaxSpeed.Value
-local maxYawSpeed = Settings.MaxSteelVel.Value
+local maxYawSpeed = Settings.MaxSteerVelocity.Value
 local throttleDiff = Settings.ThrottleDifferential.Value
 local yawDiff = Settings.SteerDifferential.Value
+local gravity = 4
+local gravityLeeway = 0.1
 
 local bVelocity = Instance.new("BodyVelocity")
 bVelocity.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
@@ -27,7 +29,7 @@ function heightFromGround()
 	if result then return Main.Position.Y - result.Position.Y else return 10 end
 end
 
-local regularYHeight = heightFromGround() + 0.5
+local regularYHeight = heightFromGround() + gravityLeeway
 
 
 function correctMax(valInstance, max)
@@ -104,7 +106,7 @@ RunService.Heartbeat:Connect(function()
 	local velZ = Main.CFrame.lookVector.Z*throttle.Value
 	local velX = Main.CFrame.LookVector.X*throttle.Value
 	local velY =  Main.CFrame.LookVector.Y*throttle.Value
-	if heightFromGround() > regularYHeight then velY =  Main.CFrame.LookVector.Y*throttle.Value -3 end
+	if heightFromGround() > regularYHeight then velY =  Main.CFrame.LookVector.Y*throttle.Value - gravity end
 	
 	bVelocity.Velocity = Vector3.new(velX,velY,velZ)
 	bAngularVYaw.AngularVelocity = Vector3.new(0,yaw.Value,0) 
