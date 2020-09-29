@@ -8,17 +8,19 @@ local maxYawSpeed = Settings.MaxYawSpeed.Value
 local throttleDiff = Settings.ThrottleDifferential.Value
 
 local bVelocity = Instance.new("BodyVelocity")
-bVelocity.MaxForce = Vector3.new(99999,999999,99999)
+bVelocity.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
 bVelocity.Velocity = Vector3.new(0,0,0)
 bVelocity.Parent = Main 
 
-
 local bAngularVYaw = Instance.new("BodyAngularVelocity")
 bAngularVYaw.AngularVelocity = Vector3.new(0,0,0)
+bAngularVYaw.MaxTorque = Vector3.new(math.huge,math.huge,math.huge)
 bAngularVYaw.Parent = Main
 
 local bGyro = Instance.new("BodyGyro")
---local GyroBlock = Main.GyroBlock
+
+-- written by g_captain
+
 function heightFromGround()
 	local result = workspace:Raycast(Main.Position, Vector3.new(0,-100,0))
 	if result then return Main.Position.Y - result.Position.Y else return 10 end
@@ -103,8 +105,6 @@ RunService.Heartbeat:Connect(function()
 	local velY =  Main.CFrame.LookVector.Y*throttle.Value
 	if heightFromGround() > regularYHeight then velY =  Main.CFrame.LookVector.Y*throttle.Value -3 end
 	
-	bVelocity.Velocity = Vector3.new(velX,velY,velZ)--Vector3.new(0,throttle.Value,0)
+	bVelocity.Velocity = Vector3.new(velX,velY,velZ)
 	bAngularVYaw.AngularVelocity = Vector3.new(0,yaw.Value,0) 
-	
-	
 end)
