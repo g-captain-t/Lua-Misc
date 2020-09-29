@@ -3,9 +3,10 @@ local Main = script.Parent.Main.Value
 local Seat = Main.Parent.VehicleSeat
 local Settings = Seat.SETTINGS
 
-local maxThrottle = Settings.MaxThrottle.Value
-local maxYawSpeed = Settings.MaxYawSpeed.Value
+local maxThrottle = Settings.MaxSpeed.Value
+local maxYawSpeed = Settings.MaxSteelVel.Value
 local throttleDiff = Settings.ThrottleDifferential.Value
+local yawDiff = Settings.SteerDifferential.Value
 
 local bVelocity = Instance.new("BodyVelocity")
 bVelocity.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
@@ -64,9 +65,9 @@ Seat:GetPropertyChangedSignal("Steer"):Connect(function()
 
 	repeat wait()
 		if Seat.Steer == -1 and yaw.Value < maxYawSpeed then	
-			wait(.1) yaw.Value = yaw.Value + 2 
+			wait(.1) yaw.Value = yaw.Value + yawDiff
 		elseif  Seat.Steer == 1 and yaw.Value >  -maxYawSpeed then
-			wait(.1) yaw.Value = yaw.Value - 2
+			wait(.1) yaw.Value = yaw.Value - yawDiff
 		end
 	until Seat.Steer == 0 
 	if Seat.Steer == 0 then 
@@ -108,3 +109,5 @@ RunService.Heartbeat:Connect(function()
 	bVelocity.Velocity = Vector3.new(velX,velY,velZ)
 	bAngularVYaw.AngularVelocity = Vector3.new(0,yaw.Value,0) 
 end)
+
+
