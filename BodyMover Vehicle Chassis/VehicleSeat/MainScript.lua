@@ -21,6 +21,7 @@ bAngularVYaw.MaxTorque = Vector3.new(math.huge,math.huge,math.huge)
 bAngularVYaw.Parent = Main
 
 local bGyro = Instance.new("BodyGyro")
+bGyro.MaxTorque = Vector3.new(math.huge,math.huge,math.huge)
 
 -- written by g_captain
 
