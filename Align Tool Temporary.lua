@@ -1,5 +1,3 @@
---Roblox took down Align Tool. This is the script I use to align multiple parts. 
---Select the moving parts first and the target object last, modify Axis and paste in console.
 local Axis = "X"
 
 local Selection = game:GetService("Selection")
@@ -12,6 +10,7 @@ for i=1, #currentSelections do
 	if i < #currentSelections then print(currentSelections[i].Name)
 	movingSelections[#movingSelections+1] = currentSelections[i] end
 end
+
 
 -- Functions
 
@@ -38,6 +37,7 @@ function moveModelCFrame(model,CF) -- Creates primary part
 	tempPrimaryPart:Destroy()
 end
 
+
 function classifyCFrame(instance)
 	if instance:IsA("Model") then return getModelCFrame(instance)
 	elseif instance:IsA("BasePart") then return instance.CFrame end
@@ -63,6 +63,7 @@ for i, sOne in pairs(movingSelections) do
 	classifyMove(sOne,newCFrame)
 
 	local logMessage = "[Align] "..sOne.Name.." moved to "..sTwo.Name.." Axis "..Axis
-	ChangeHistoryService:SetWaypoint(logMessage) print(logMessage)
+	print(logMessage)
 	
 end
+ChangeHistoryService:SetWaypoint("Align Objects") 
