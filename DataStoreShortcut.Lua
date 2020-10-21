@@ -32,25 +32,5 @@ function DSS.Remove(store, key)
 end
 
 function DSS.GetDataStore(store) return DataStoreService:GetDataStore(store) end
-function DSS.GetSorted(store, isAscending, pageSize) return store:GetSortedAsync(isAscending, pageSize) end
-
-
---- Custom Functions
-
-function DSS.Print(store, pageSize)
-	local pages = DSS.GetSorted(store, true, pageSize)
-	local result 
-	while true do
-		local data = pages:GetCurrentPage()
-		for _, entry in pairs(data) do
-			result = result.."/n".. entry.key..": "..tostring(entry.value)
-		end
-		if pages.IsFinished then break
-		else result = result.."/n".."----------------" pages:AdvanceToNextPageAsync()
-		end 
-	end
-	print(result)
-	return result
-end
 
 return DSS
