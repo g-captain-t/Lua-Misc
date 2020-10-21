@@ -26,7 +26,7 @@ tm.second() 	-- 10
 ]]
 
 local tm = {}
-function tm.t()  return os.time 	end
+function tm.t()  return os.time() 	end
 
 function tm.weekday()  return os.date("%A", os.time()) 	end	-- Wednesday
 function tm.day()  return os.date("%d",os.time()) 	end	-- 16
