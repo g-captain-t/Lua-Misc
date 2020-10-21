@@ -1,4 +1,4 @@
---[[
+--[[ Call require(5855143031) to use this 
 Made this in my spare time out of boredom, here are my shortcuts for os.time():
 
 tm.t() 		-- 906000490
