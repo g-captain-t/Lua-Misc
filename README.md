@@ -1,1 +1,1 @@
-# g_captain's miscelanneous open-sourced code
+# g_captain's miscelanneous code
