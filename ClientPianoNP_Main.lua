@@ -7,22 +7,30 @@ script.Parent.PianoGui.Position = UDim2.new(0.5, -380,1, -210)
 Gui = script.Parent
 Player = game.Players.LocalPlayer
 PlayingEnabled = true
+local i = require(script.Parent.MainModule)
+
 
 ScriptReady = false
-----------------------------------
-----------------------------------
-----------------------------------
----------PIANO CONNECTION---------
-----------------------------------
-----------------------------------
-----------------------------------
-
 ----------------------------------
 ------------VARIABLES-------------
 ----------------------------------
 
 PianoId = nil
+ContentProvider = game:GetService("ContentProvider")
 
+LocalSounds = i["Grand Piano"]
+	
+--[[{
+	"233836579", --C/C#
+	"233844049", --D/D#
+	"233845680", --E/F
+	"233852841", --F#/G
+	"233854135", --G#/A
+	"233856105", --A#/B
+}]]
+
+SoundFolder = Gui.SoundFolder
+ExistingSounds = {}
 
 ----------------------------------
 ------------FUNCTIONS-------------
@@ -344,33 +352,7 @@ end
 ----------------------------------
 ----------------------------------
 
-----------------------------------
-------------VARIABLES-------------
-----------------------------------
 
-ContentProvider = game:GetService("ContentProvider")
-
-LocalSounds = {
-	"233836579", --C/C#
-	"233844049", --D/D#
-	"233845680", --E/F
-	"233852841", --F#/G
-	"233854135", --G#/A
-	"233856105", --A#/B
-}
-
-
-local ss = {
-	"233836579", --C/C#
-	"233844049", --D/D#
-	"233845680", --E/F
-	"233852841", --F#/G
-	"233854135", --G#/A
-	"233856105", --A#/B
-}
-
-SoundFolder = Gui.SoundFolder
-ExistingSounds = {}
 
 ----------------------------------
 ------------FUNCTIONS-------------
@@ -504,4 +486,4 @@ end
 ----------------------------------
 
 ScriptReady = true
-Activate(ss)
+Activate(LocalSounds)
