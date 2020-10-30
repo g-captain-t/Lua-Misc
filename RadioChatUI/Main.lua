@@ -49,8 +49,8 @@ Players.PlayerAdded:Connect(function(player)
 	end)
 	
 	player.Chatted:Connect(function(message)								-- On Chat
-		if not cGui then print("cgui not found") return end
-		if not cGui.ChatEnabled.Value then print("cnabled false") return end
+		if not cGui then return end
+		if not cGui.ChatEnabled.Value then return end
 		local msgString = "["..player.Name.."] "..message
 		Remote:FireAllClients("NEWMESSAGE", msgString)
 	end)
