@@ -3,7 +3,7 @@ local Remote = script.Parent.Remote.Value
 local frame = script.Parent.Frame
 local scrollFrame = script.Parent.Frame.ScrollingFrame
 local messageTemplate = script.Parent.Frame.ScrollingFrame.Message
-local maxMessages = script.Parent.MaxMessages.Value print(maxMessages)
+local maxMessages = script.Parent.MaxMessages.Value
 
 messageTemplate.Visible = false
 messageTemplate.Parent = script
@@ -20,7 +20,6 @@ Remote.OnClientEvent:Connect(function(action, message)
 		cMessage.Visible = true
 		cMessage.Parent = scrollFrame
 		scrollFrame.CanvasPosition = Vector2.new(0,scrollFrame.CanvasSize.Y.Offset)
-		print(message)
 	end
 end)
 
