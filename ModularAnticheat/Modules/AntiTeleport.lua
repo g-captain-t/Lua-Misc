@@ -13,7 +13,7 @@ Extra Checks
 local AntiTeleport = {}
 local leeway = 2
 
-local function Check(char, player, lastposXZ)
+local function Check(char, player, lastposXZ, lastPosHRP)
 
 	local Humanoid = char.Humanoid
 	local HRP = char.HumanoidRootPart
@@ -25,7 +25,7 @@ local function Check(char, player, lastposXZ)
 	local Magnitude = (PosXZ- lastposXZ).magnitude
 
 	if not (Magnitude > maxMagnitude) then return end
-	HRP.CFrame = CFrame.new(lastposXZ)
+	HRP.CFrame = CFrame.new(lastPosHRP)
 	
 end
 
@@ -36,7 +36,7 @@ function AntiTeleport.BindCheck(char, player)
 			local PosHRP = char:WaitForChild("HumanoidRootPart").Position
 			local lastPosXZ = Vector3.new(PosHRP.X, 0, PosHRP.Z)
 			wait(1)
-			Check(char, player, lastPosXZ) 
+			Check(char, player, lastPosXZ, PosHRP) 
 			
 		end
 	end)()
