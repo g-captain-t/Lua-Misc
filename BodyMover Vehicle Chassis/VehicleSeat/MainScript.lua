@@ -7,17 +7,20 @@ local maxThrottle = Settings.MaxSpeed.Value
 local maxYawSpeed = Settings.MaxSteerVelocity.Value
 local throttleDiff = Settings.ThrottleDifferential.Value
 local yawDiff = Settings.SteerDifferential.Value
-local gravity = 4
+local gravity = 9.8
 local gravityLeeway = 0.1
+local antiGravity = Settings.AntiGravity.Value
 
 local bVelocity = Instance.new("BodyVelocity")
-bVelocity.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+local maxForceY = antiGravity and math.huge or 0
+bVelocity.MaxForce = Vector3.new(math.huge,maxForceY,math.huge)
 bVelocity.Velocity = Vector3.new(0,0,0)
 bVelocity.Parent = Main 
 
 local bAngularVYaw = Instance.new("BodyAngularVelocity")
 bAngularVYaw.AngularVelocity = Vector3.new(0,0,0)
-bAngularVYaw.MaxTorque = Vector3.new(math.huge,math.huge,math.huge)
+local maxTorqueAngular = antiGravity and math.huge or 0
+bAngularVYaw.MaxTorque = Vector3.new(maxTorqueAngular,math.huge,maxTorqueAngular)
 bAngularVYaw.Parent = Main
 
 local bGyro = Instance.new("BodyGyro")
@@ -106,11 +109,9 @@ end
 RunService.Heartbeat:Connect(function() 
 	local velZ = Main.CFrame.lookVector.Z*throttle.Value
 	local velX = Main.CFrame.LookVector.X*throttle.Value
-	local velY =  Main.CFrame.LookVector.Y*throttle.Value
-	if heightFromGround() > regularYHeight then velY =  Main.CFrame.LookVector.Y*throttle.Value - gravity end
+	local velY = Main.CFrame.LookVector.Y*throttle.Value 
+	if heightFromGround() > regularYHeight and antiGravity then velY =  Main.CFrame.LookVector.Y*throttle.Value - gravity end
 	
 	bVelocity.Velocity = Vector3.new(velX,velY,velZ)
 	bAngularVYaw.AngularVelocity = Vector3.new(0,yaw.Value,0) 
 end)
-
-
