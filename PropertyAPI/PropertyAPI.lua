@@ -2,6 +2,7 @@
 
 local HttpService = game:GetService("HttpService")
 local Data = HttpService:JSONDecode(require(script.latest_json)) 
+local s = tostring
 local Properties = {}
 
 function Properties:Get(instanceName)
@@ -60,14 +61,34 @@ end
 
 function Properties:TransferAll(instance1, instance2, ignoredPropertiesTable)
 	local I1Properties = Properties:Get(instance1.ClassName)
-	for i=1, #I1Properties do
-		local property = I1Properties[i]
+	for i, property in pairs (I1Properties) do
 		pcall (function() 
 			if isInTable(ignoredPropertiesTable, property) then return end
 			instance2[property] = instance1[property] 
 		end)
 	end
 end
+
+-- local typeOfNew = {"Vector3", "Vector2", "Region3", "Color3", "CFrame", "NumberRange"} -- DataType.new()
+-- local typeOfNewRemoveBrackets = {"UDim2", "UDim"} -- DataType.new({})
+
+-- Dumping properties to generate constructors
+function Properties:DumpAll(instance1)
+	print("---------------------")
+	print(instance1:GetFullName())
+	local I1Properties = Properties:Get(instance1.ClassName)
+	for i, property in pairs (I1Properties) do
+		pcall (function() 
+			local propertyType = typeof(instance1[property])
+			local ignoreTypes = {"number","boolean","EnumItem"}
+			propertyType = isInTable(ignoreTypes,propertyType) and "" or propertyType
+			local propertyString
+			print("['"..s(property).."'] =",propertyType, instance1[property], ";")
+		end)
+	end
+	print("---------------------")
+end
+
 
 
 return Properties
@@ -76,8 +97,6 @@ return Properties
 
 -- https://anaminus.github.io/rbx/json/api/latest.json
 -- https://scriptinghelpers.org/questions/50784/
-
-
 
 -- table Properties:Get("ClassName") 
 -- Returns the table of a class's properties
@@ -91,10 +110,17 @@ return Properties
 -- Sets instance2's properties to instance1, except for properties in ignoredPropertiesTable
 -- Properties:TransferAll(Part, PartTwo, {"Name", "CFrame", "Position", "Orientation"})
 
+-- void Properties:DumpAll(instance1)
+-- Dumps all properties in output in a table format
 
---[[ Test in command line:
+
+--[[ Test this in command line:
 
 local Properties = require(workspace.PropertyAPI) 
-Properties:TransferAll(workspace.Part, workspace.Part2, {"Name", "CFrame", "Position", "Orientation"})
+Properties:Transfer(workspace.Part, workspace.Part2, {"Name", "CFrame", "Position", "Orientation"})
+
+
+local Properties = require(workspace.PropertyAPI) 
+Properties:DumpAll(workspace.Part)
 
 ]]
