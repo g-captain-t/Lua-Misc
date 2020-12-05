@@ -1,0 +1,10 @@
+{
+	"TestCategory":[
+		{"Shirt":"/3670737444/Roblox-Shirt-Simple-Pattern", "Pants":"129459077/Black-Slacks"},
+		{"Shirt":"607785314/ROBLOX-Jacket","Pants":"129458426/Jeans"}
+	],
+	"NamedCategory":{
+		"NamedHangarRight":{"Shirt":"/3670737444/Roblox-Shirt-Simple-Pattern","Pants":"129459077/Black-Slacks"},
+		"NamedHangarLeft": {"Shirt":"607785314/ROBLOX-Jacket","Pants":"129458426/Jeans"}
+	}
+}
