@@ -4,7 +4,8 @@
 	Theoretically, this works, but there's no way Studio can generate 518 400 pixel-frames at once.
 	I might try using separate scripts, binding to a runservice event ( which takes 8640 seconds for a 720x720 map ),
 	or passing this on as a JSON for a web program to handle it.
-	It's far better to screenshot with FOV1.
+	Screenshot with one line:
+	local Cam = workspace.CurrentCamera Cam.FieldOfView = 1 Cam.CFrame = CFrame.new(0,100000,0)
 ]]
 
 local s = tostring
