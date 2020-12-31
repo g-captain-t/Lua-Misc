@@ -13,6 +13,7 @@ for g=1, 1000000 do
 	for z=1,#nets do	
 		local network = module.loadNet(nets[z])			-- Load the network's stringvalue
 		local wins=0
+		local answer=module.forwardNet(network,{--[[input here]]})[1] 
 		
 		table.insert(scores,wins)						-- Insert wins as scores
 	end
