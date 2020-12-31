@@ -3,6 +3,9 @@ Swordfighters
 - The bots know their position, their health, their enemy's position, and the enemy's health.
 - The outputs are their next direction,their rotation, and previously, whether to swing their weapons
 - Two bots are put up against each other at a time. Only the winner has a score based on their win time.
+
+The bots quickly learned to walk to their enemy, and some of them spun like a spinning top to make sure their
+sword hit wherever the enemy came from.
 ]]
 local neuro = require(script.Parent.Neuro)
 hint = Instance.new("Hint", script.Parent)
@@ -81,7 +84,7 @@ for generation = 1, math.huge do
 			end
 		end
 		local dt = tick()-time_Start
-		winnerbrain:IncreaseFitness(dt)
+		winnerbrain:IncreaseFitness(1/dt)
 	end
 
 	population:Evolve()
