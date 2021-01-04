@@ -1,17 +1,18 @@
---// Cache "datastore"
---// 
---[[ Structure:
-    Kills= 0,
-    BattlesFought = 0,
-    Awards = { 
-        ["MVP"] = 1
-    },
-    Fighters={
-        "StandardJet","F-16"
-    },
+--[[
+
+Cached datastore
+My personal datastore wrapper with caching to stop throttling
+
+function DSS.Get(key, storename, defaultdata)
+function DSS.Save(key, storename, data)
+function DSS.SaveStore(key, storename, data)
+function DSS.SaveAllToStore(storename)
+function DSS.SaveCacheToStore()
+
+function DSS.UpdateAsync(Store, key, data, [optional] defaultdata) 			--// To replace setasync
+
 ]]
 
-local SaveToDataStore = true
 
 local DS = game:GetService("DataStoreService")
 local RS = game:GetService("RunService")
@@ -26,9 +27,32 @@ local function getTableLength(Table)
 	return count
 end
 
+local function rwait() RS.Heartbeat:Wait() end
+
+--// From ForeverHD's PSA on why not to use SetAsync https://devforum.roblox.com/t/276457
+
+function DSS.UpdateAsync(Store, key, data, defaultdata)
+	if not data then return end
+	local updateddata
+	Store:UpdateAsync(key, function(oldValue)
+		--// Retrieve the DataID
+		local previousData = oldValue or defaultdata or {DataId = 0}
+		previousData.DataId = previousData.DataId or 0
+		data.DataId = data.DataId or 0
+		--// Validate the DataID
+		if data.DataId == previousData.DataId then
+			data.DataId = data.DataId + 1
+			updateddata = data
+			return data
+		else
+			return nil
+		end
+	end)
+	return updateddata
+end
+
 function DSS.Get(key, storename, defaultdata)
 	--// Retrieve data from the cache or the datastore
-
 	if not Cache[storename] then Cache[storename]={} end
 	local pData = Cache[storename][key]
 	if not pData then 
@@ -63,7 +87,7 @@ function DSS.SaveStore(key, storename, data)
 	--// Save a given data or the cached data to datastore
 	local Store = DS:GetDataStore(storename)
 	data = data or DSS.Get(key, storename)
-	local s,v = pcall(function() return Store:SetAsync(key, data) end)
+	local s,v = pcall(function() return DSS.UpdateAsync(Store, key, data) end)
 	return s,v
 end
 
@@ -72,8 +96,10 @@ function DSS.SaveAllToStore(storename)
 	local Errors = {}
 	local Store = DS:GetDataStore(storename)
 	for key, data in pairs(Cache[storename]) do
-		RS.Heartbeat:Wait()
-		local s,v = pcall (function() return Store:SetAsync(key,data)  end)
+		rwait()
+		local s,v = pcall (function() 
+			return DSS.UpdateAsync(Store, key, data)
+		end)
 		if not s then warn(v) table.insert(Errors,v) end
 	end
 	for _,err in pairs (Errors) do print(err) end
@@ -88,19 +114,19 @@ function DSS.SaveCacheToStore()
 end
 
 game:BindToClose(function()
-	print("Savingggg")
+	print("Saving...")
 	local isDataSaved = false
 	--// Save all player data
 	for _, player in pairs(Players:GetPlayers()) do
 		player:Kick()
 	end
 	--// Save the cache's stores 
-	
-	DSS.SaveCacheToStore()
-	isDataSaved = true
-	
-	repeat RS.Heartbeat:Wait() until isDataSaved
-	print("SAVED!!")
+	coroutine.wrap(function()
+		DSS.SaveCacheToStore()
+		isDataSaved = true
+	end)()
+	repeat rwait() until isDataSaved
+	print("Saved!")
 end)
 
 return DSS
