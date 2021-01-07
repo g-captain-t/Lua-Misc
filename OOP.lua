@@ -38,14 +38,13 @@ function MyObject.new(Property1, Property2)
 	}
 
 	function myobj:Print()
-		print(self.Property1)
+		print(myobj.Property1)
 	end
 
 	function myobj:Destroy()
-		for property, _ in pairs (self) do
-			self[property]=nil
+		for property, _ in pairs (myobj) do
+			myobj[property]=nil
 		end
-		setmetatable(self,nil)
 	end
 
 	return myobj
