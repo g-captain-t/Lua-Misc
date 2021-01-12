@@ -101,6 +101,8 @@ function Serialize.Serialize(value)
     local Type = typeof(value)
     if Serialize.lib[Type] then
         return Serialize.lib[Type].serialize(value)
+	else
+		return value
     end
 end
 
@@ -108,6 +110,8 @@ function Serialize.Deserialize(packed)
     local Type = packed[dtype]
     if Serialize.lib[Type] then
         return Serialize.lib[Type].deserialize(packed[1])
+	else
+		return packed
     end
 end
 
