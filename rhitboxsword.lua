@@ -1,3 +1,7 @@
+--[[ rhitboxsword
+A template for Swordphin123's RaycastHitbox https://devforum.roblox.com/t/374482
+]]
+
 local Tool = script.Parent
 local Handle = Tool:WaitForChild("Handle")
 
@@ -12,6 +16,10 @@ local RunService = game:GetService("RunService")
 ToolEquipped = false
 Tool.Enabled = true
 
+function Blow(part)
+	-- take damage...
+end
+	
 function Attack()
 	wait(0.2)
 	Hitbox:HitStop()
