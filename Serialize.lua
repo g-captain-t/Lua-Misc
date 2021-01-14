@@ -106,7 +106,8 @@ function Serialize.Serialize(value)
 end
 
 function Serialize.Deserialize(packed)
-    local Type = packed[dtype]
+    local Type = typeof(packed)
+    Type = Type=="table" and packed[dtype] or Type
     if Serialize.lib[Type] then
         return Serialize.lib[Type].deserialize(packed[1])
     else
