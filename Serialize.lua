@@ -2,7 +2,7 @@
 
 Serialize by g_captain
 Serializes Roblox datatypes into tables. A serialized value looks like this:
-{dtype="Vector3",{13,4,3}}
+{"Vector3",{13,4,3}}
 
 CFrame
 Color3
@@ -22,7 +22,7 @@ Serialize.DeserializeAll(tuple values)
 local Serialize = {}
 
 function Serialize.pack(dtype, value)
-    return {["dtype"] = dtype, value}
+    return {dtype, value}
 end
 local pack = Serialize.pack
 
@@ -107,9 +107,9 @@ end
 
 function Serialize.Deserialize(packed)
     local Type = typeof(packed)
-    Type = Type=="table" and packed[dtype] or Type
+    Type = Type=="table" and packed[1] or Type
     if Serialize.lib[Type] then
-        return Serialize.lib[Type].deserialize(packed[1])
+        return Serialize.lib[Type].deserialize(packed[2])
     else
         return packed
     end
