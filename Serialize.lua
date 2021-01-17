@@ -48,7 +48,8 @@ Serialize.lib = {
 	},
 	["Color3"] = {
 		serialize = function(value)
-			return pack("Color3", {value.R*255, value.G*255, value.B*255})
+			local f = math.floor
+			return pack("Color3", {f(value.R*255), f(value.G*255), f(value.B*255)})
 		end,
 		deserialize = function(value)
 			return Color3.fromRGB(table.unpack(value))
