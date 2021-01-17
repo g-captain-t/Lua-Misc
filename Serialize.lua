@@ -75,7 +75,7 @@ Serialize.lib = {
 	},
 	["UDim"] = {
 		serialize = function(value)
-			return pack("UDim", {value.X, value.Y})
+			return pack("UDim", {value.Scale, value.Offset})
 		end,
 		deserialize = function(value)
 			return UDim.new(table.unpack(value))
