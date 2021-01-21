@@ -156,7 +156,7 @@ game:BindToClose(function()
 	coroutine.wrap(function()
 		for storename,store in pairs (Cache) do 
 			for key, profile in pairs (store) do 
-				pcall(function() PSWrap.Clear(key, storename) end)
+				pcall(function() PSWrap.SaveStore(key, storename) end)
 			end
 		end
 		finished = true
