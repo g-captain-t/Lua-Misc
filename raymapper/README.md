@@ -1,6 +1,8 @@
-![](/example/example2.png)
-
 # raymapper
+
+![](example/example2.png)
+> *The Western template place*
+
 An experimental Roblox minimap generator I made in a few hours. 
 
 This works by retrieving each pixel color from raycasts, then converting it to a JSON table. Below is an example 3x2 image:
