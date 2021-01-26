@@ -1,0 +1,51 @@
+<input id="fileupload" type="file" onchange="onupload()"><br><br>
+<canvas id = "image" width="50" height="50" style = "border:solid 3px"></canvas>
+
+<script>
+/* var sample = [
+	[[255,0,0],[255,0,0],[0,0,255],[255,0,255],[255,0,0],[0,0,0]],
+	[[255,0,0],[255,0,0],[0,0,255],[255,0,255],[255,0,0],[0,0,255]],
+	[[255,0,0],[255,0,0],[0,0,255],[255,0,255],[255,0,0],[0,0,0]],
+] */
+
+function map (file) {
+	var canvas = document.getElementById("image")
+	var context = canvas.getContext("2d")
+	canvas.height = file.length
+	canvas.width = file[1].length
+	var width = canvas.width
+	var height = canvas.height
+
+	var idata = context.createImageData(width,height)
+
+	function px (i4,c) {
+		idata.data[i4+0] = c[0];
+		idata.data[i4+1] = c[1];
+		idata.data[i4+2] = c[2];
+		idata.data[i4+3] = 255;
+	}
+
+	var y
+	var icount = -1
+	for (y=0; y<height; y+=1) {
+    	var x
+		for (x=0; x<width; x+=1) {
+			icount += 1
+			px(icount*4,file[y][x])
+		}
+	}
+
+	context.putImageData(idata, 0, 0)
+}
+
+function onupload () {
+	var file = document.getElementById("fileupload").files[0]
+	var reader = new FileReader()
+	reader.onload = function(ev) {
+  		var contents = ev.target.result
+    	var json = JSON.parse(contents)
+        map(json)
+	}
+	reader.readAsText(file)
+}
+</script>
