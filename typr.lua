@@ -25,7 +25,7 @@ end
 return function (types, ...)
 	local pass, firsterror = true, ""
 	for i, v in ipairs ({...}) do 
-		if types[i] or types[i]~="any" then 
+		if types[i] and types[i]~="any" then 
 			local Type =  typeof(v)
 			local allgood = true
 			local checks = {
