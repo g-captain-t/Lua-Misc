@@ -106,8 +106,10 @@ end
 
 function PSWrap.SaveStore(key, storename)
 	key = tostring(key)
-	local profile = PSWrap.Clear(key, storename)
+	Cache[storename] = Cache[storename] or {}
+	local profile = Cache[storename][key]
 	if profile then profile:Release() end
+	PSWrap.Clear(key, storename)
 end
 
 function PSWrap.ClearStore(key, storename)
