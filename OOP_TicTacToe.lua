@@ -46,7 +46,7 @@ local function tcompare(t0,t1)
 			local isvsimillar = tcompare(v, t1[i])
 			if not isvsimillar then issimillar = false break end 
 		elseif v ~= t1[i] then
-			isvsimillar = false 
+			issimillar = false 
 			break
 		end
 	end
