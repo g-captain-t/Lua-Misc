@@ -34,8 +34,9 @@ end
 
 -- NEURAL NETWORK
 
-local NNL.nn = {}
+NNL.nn = {}
 local nn = NNL.nn
+nn.__index = nn
 
 local activation_functions = {
 	sigmoid = function(x, deriv)
@@ -64,6 +65,7 @@ end
 function nn.new(newsettings)
 	local self = {} 
 	setmetatable(self,nn)
+	newsettings = newsettings or {}
 	self.settings = {
 		OutputNodes = newsettings.OutputNodes or 1;
 		InputNodes = newsettings.InputNodes or 3;
@@ -73,6 +75,7 @@ function nn.new(newsettings)
 		InputActivation = newsettings.InputActivation or "sigmoid";
 		LearningRate = newsettings.LearningRate or 0.2;
 	}
+	self._lastinputs = {}
 	--[[
 		inputs = {1,2,3,4,5}
 			w: the synapse weight, b: the bias, d: the last delta
@@ -128,7 +131,7 @@ function nn:Forward(inputs)
 		local activations = {}
 		for i2, node in ipairs(layer) do 
 			local activation = self:_activate(node.w, last_activations)
-			local a_function = activation_functions[self.HiddenActivation]
+			local a_function = activation_functions[self.settings.HiddenActivation]
 			activation = a_function(activation)	 -- sig (wa)
 			activations[i2] = activation	
 			node.o = activation					  -- Keep the output for backpropagation
@@ -171,7 +174,7 @@ function nn:Cost(expected)
 		else
 			-- A hidden layer
 			for i2, thisnode in ipairs (layer) do 
-				local right_layer = thisnode.w[i+1] -- Get the layer to the right
+				local right_layer = self.layers[i+1] -- Get the layer to the right
 				local error = 0
 				for i2, rightnode in ipairs (right_layer) do 
 					-- Get this node's weight in the right node
@@ -183,7 +186,7 @@ function nn:Cost(expected)
 		end
 		-- Finally, apply the deltas
 		for i2, node in ipairs (layer) do 
-			local deriv_function = activation_functions[self.HiddenActivation]
+			local deriv_function = activation_functions[self.settings.HiddenActivation]
 			node.d = errors[i2] * deriv_function(node.o)
 		end
 	end
@@ -193,13 +196,15 @@ function nn:Learn()
 	-- Use after nn:Cost()
 	-- This will apply all the deltas to the weights
 	-- If this was called before a forward propagation, jail
-	local learning_rate = self.LearningRate
+	local learning_rate = self.settings.LearningRate
 
-	local inputs = self._lastinput
+	local inputs = self._lastinputs
 	for i, layer in ipairs(self.layers) do
 		-- New = Current + dot (inputs . deltas) 
 		for i2, node in ipairs(layer) do
-			node.w = node.w + inputs[i2]*n.d*learning_rate
+			for i3, w in ipairs (node.w)do 
+				node.w[i3] = w + inputs[i2]*node.d*learning_rate
+			end
 		end
 		-- Set their last output as the next layer's input
 		inputs = {}
@@ -219,7 +224,7 @@ local x = {1,0,1}
 
 NNL.tprint(nn)
 
-local output = nnl:Forward(x)
+local output = nn:Forward(x)
 nn:Cost(y)
 nn:Learn()
 
