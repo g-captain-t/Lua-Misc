@@ -42,7 +42,7 @@ local controlhub = function (container)
 
 	local nqueue = #queue
 	local running = {}
-	for priority=0, largestpriority do 
+	for priority=smallestpriority, largestpriority do 
 		if #running == nqueue or largestpriority == -math.huge then
 			break
 		end
