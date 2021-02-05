@@ -9,8 +9,7 @@ folder with controllers with a single server/client script.
 
 A controller looks like this:
 
-	local controller = {}
-	controller.meta = {
+	local controller = {
 		IsAsync = true;
 		Priority = 0;		-- Smallest first
 	}
