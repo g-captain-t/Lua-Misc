@@ -1,6 +1,5 @@
 --[[
 
-
 STYLE GUIDE
 
 - PascalCase for configurations that user accesses
@@ -8,6 +7,14 @@ STYLE GUIDE
 - semicolon (;) for dictionaries and commas for arrays
 - Keep between 1-5 tabs, or at least try to avoid chevrons
 - Prefer ternary operators for setting values unless it's more convenient to use if
+
+API
+
+NNL.nn.new(properties)
+nn:Forward(array x)
+nn:Cost()
+nn:Learn()
+
 
 ]]
 
@@ -138,6 +145,7 @@ function nn:Forward(inputs)
 		end
 		last_activations = activations				  -- forward it to the next layer
 	end
+	outputs = last_activations
 	return outputs
 end
 
@@ -168,7 +176,7 @@ function nn:Cost(expected)
 			-- this is an output layer
 			local error = 0 -- Total error for this layer's synapse
 			for i2, thisnode in ipairs(layer) do 
-
+				error = error + expected[i2]-thisnode.o
 			end
 			table.insert(errors, error)
 		else
@@ -219,16 +227,18 @@ end
 local NNL = require "NNL"
 local nn = NNL.nn.new()
 
-local y = 0.5
+local y = {0.5}
 local x = {1,0,1}
 
-NNL.tprint(nn)
+NNL.tprint(nn.layers)
+print("------")
 
-local output = nn:Forward(x)
+NNL.tprint(nn:Forward(x))
+print("------")
+
 nn:Cost(y)
 nn:Learn()
-
-NNL.tprint(nn)
+NNL.tprint(nn.layers)
 
 ]]
 
