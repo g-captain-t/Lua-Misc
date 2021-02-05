@@ -1,5 +1,6 @@
 --[[
 
+
 STYLE GUIDE
 
 - PascalCase for configurations that user accesses
@@ -8,13 +9,16 @@ STYLE GUIDE
 - Keep between 1-5 tabs, or at least try to avoid chevrons
 - Prefer ternary operators for setting values unless it's more convenient to use if
 
+
+A simple NN I wrote when I came across this article, just to get a better understanding:
+https://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
+
 API
 
 NNL.nn.new(properties)
-nn:Forward(array x)
-nn:Cost()
+nn:Forward(array inputs)
+nn:Cost(array expected)
 nn:Learn()
-
 
 ]]
 
@@ -224,21 +228,23 @@ end
 
 --[[ Test this
 
+math.randomseed(os.time())
 local NNL = require "NNL"
 local nn = NNL.nn.new()
 
 local y = {0.5}
 local x = {1,0,1}
 
-NNL.tprint(nn.layers)
-print("------")
+local epochs = 1000
+for i=1, epochs do 
+	nn:Forward(x)
+	nn:Cost(y)
+	if i % 10 ==0 then
+		nn:Learn() 
+	end
+end
 
-NNL.tprint(nn:Forward(x))
-print("------")
-
-nn:Cost(y)
-nn:Learn()
-NNL.tprint(nn.layers)
+print(nn:Forward(x)[1])
 
 ]]
 
