@@ -38,6 +38,27 @@ local function tshallowcopy(t)
 	return nt
 end
 
+local function tdeepcopy(orig, copies) -- thanks lua users wiki
+    copies = copies or {}
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        if copies[orig] then
+            copy = copies[orig]
+        else
+            copy = {}
+            copies[orig] = copy
+            for orig_key, orig_value in next, orig, nil do
+                copy[tdeepcopy(orig_key, copies)] = tdeepcopy(orig_value, copies)
+            end
+            setmetatable(copy, tdeepcopy(getmetatable(orig), copies))
+        end
+    else 
+        copy = orig
+    end
+    return copy
+end
+
 local debugmode = false
 function NNL.dprint(...)
 	if debugmode then print(...) end
@@ -115,9 +136,27 @@ local activation_functions = {
 	end;
 }
 
+--[[
+hmm what can this be
+local optimizers = {
+	stochasticgradientdescent = function(node)
+		return change
+	end;
+	momentum = function(node)
+		return change
+	end;
+	adam = function(node)
+		return change
+	end;
+}]]
+
 local function random01()
 	local pv = 1000000000000000
 	return math.random(0,pv)/pv
+end
+
+local function blanknode()
+	return {w={}; d=0; o=0}
 end
 
 function nn.new(newsettings)
@@ -147,7 +186,7 @@ function nn.new(newsettings)
 	for n_syn = 1, self.settings.HiddenLayers do 
 		local hiddenlayer = {}
 		for n_node = 1, self.settings.HiddenNodes do 
-			local node = {w={}; d=0; o=0}
+			local node = blanknode()
 			-- #weights should be #activations
 			local weights_needed = n_syn==1 and self.settings.InputNodes or self.settings.HiddenNodes
 			for n_w = 1, weights_needed do 
@@ -159,7 +198,7 @@ function nn.new(newsettings)
 	end
 	local outputlayer = {}
 	for n_node = 1, self.settings.OutputNodes do 
-		local node = {w={}; d=0; o=0}
+		local node = blanknode()
 		local weights_needed = n_syn==1 and self.settings.InputNodes or self.settings.HiddenNodes
 		for n_w = 1, weights_needed do 
 			node.w[n_w] = random01()
@@ -216,6 +255,11 @@ end
 
 df = f * (1-f)
 
+		nn.layers = {
+			{{w={0,1,1,1,1}; b=10; o=0.4; d=0.2}, {w={0,1,1,1,1}}, {w={0,1,1,1,1}}},
+			{{w={0,1,1,1,1}; b=10; o=0.4; d=0.2}, {w={0,1,1,1,1}}, {w={0,1,1,1,1}}}
+		}
+
 ]]
 
 function nn:Cost(expected)
@@ -234,10 +278,10 @@ function nn:Cost(expected)
 			-- A hidden layer
 			for i2, thisnode in ipairs (layer) do 
 				local right_layer = self.layers[i+1] -- Get the layer to the right
-				local error = 0
+				local error = 0						 -- Total error of the right layer, the 'output'
 				for i2, rightnode in ipairs (right_layer) do 
-					-- Get this node's weight in the right node
-					-- And get the error
+					-- Getting the weighted errors of each node in the output
+					-- error = connecting weight x output node error x slope
 					error = error + rightnode.w[i2] * rightnode.d
 				end
 				table.insert(errors, error)
@@ -255,14 +299,15 @@ function nn:Learn()
 	-- Use after nn:Cost()
 	-- This will apply all the deltas to the weights
 	-- If this was called before a forward propagation, jail
-	local learning_rate = self.settings.LearningRate
 
 	local inputs = self._lastinputs
 	for i, layer in ipairs(self.layers) do
 		-- New = Current + dot (inputs . deltas) 
 		for i2, node in ipairs(layer) do
 			for i3, w in ipairs (node.w)do 
-				node.w[i3] = w + inputs[i2]*node.d*learning_rate
+				local learning_rate = self.settings.LearningRate
+				local change = inputs[i2] * node.d * learning_rate
+				node.w[i3] = w + change
 			end
 		end
 		-- Set their last output as the next layer's input
@@ -292,6 +337,12 @@ for i=1, epochs do
 	end
 end
 
+print(nn:Forward(x)[1])
+
+-- JSON API
+
+local saved = nn:toJSON()
+local loaded = NNL.nn.fromJSON(saved)
 print(nn:Forward(x)[1])
 
 ]]
