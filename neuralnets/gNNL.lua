@@ -15,7 +15,10 @@ https://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-p
 
 API
 
-NNL.nn.new(properties)
+NNL.nn.new(settings)
+NNL.nn.fromJSON(string)
+nn:toJSON()
+
 nn:Forward(array inputs)
 nn:Cost(array expected)
 nn:Learn()
@@ -26,6 +29,14 @@ nn:Learn()
 -- NN Library
 
 local NNL = {}
+
+local function tshallowcopy(t)
+	local nt = {}
+	for i, v in pairs (t) do
+		nt[i] = v
+	end
+	return nt
+end
 
 local debugmode = false
 function NNL.dprint(...)
@@ -48,6 +59,42 @@ end
 NNL.nn = {}
 local nn = NNL.nn
 nn.__index = nn
+
+-- JSON API, needs another library
+local jsonconfig = {
+	encode = function(...) return game.HttpService:JSONEncode(...) end;
+	decode = function(str) return game.HttpService:JSONDecode(str) end;
+	compress = nil;
+	decompress = nil;
+}
+
+function nn.fromJSON(str)
+	str = jsonconfig.decompress and jsonconfig.decompress(str) or str 
+	local self = jsonconfig.decode(str)
+	self._lastinputs = {}
+	for _,layer in ipairs (self.layers) do
+		for _, node in ipairs(layer) do
+			node.o, node.d = 0, 0
+		end
+	end
+	return self
+end
+
+function nn:toJSON()
+	local copy = tshallowcopy(self)
+	-- Reset the last output and deltas
+	copy._lastinputs = nil
+	for _,layer in ipairs (self.layers) do
+		for _, node in ipairs(layer) do
+			node.o, node.d = nil, nil
+		end
+	end
+	local json = jsonconfig.encode(copy)
+	json = jsonconfig.compress and jsonconfig.compress(json) or json 
+	return json
+end
+
+-- nn
 
 local activation_functions = {
 	sigmoid = function(x, deriv)
@@ -225,6 +272,7 @@ function nn:Learn()
 		end
 	end
 end
+
 
 --[[ Test this
 
