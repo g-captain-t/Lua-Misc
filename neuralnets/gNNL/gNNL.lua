@@ -199,7 +199,7 @@ function nn.new(newsettings)
 	local outputlayer = {}
 	for n_node = 1, self.settings.OutputNodes do 
 		local node = blanknode()
-		local weights_needed = n_syn==1 and self.settings.InputNodes or self.settings.HiddenNodes
+		local weights_needed = self.settings.HiddenNodes
 		for n_w = 1, weights_needed do 
 			node.w[n_w] = random01()
 		end
