@@ -116,7 +116,7 @@ function population:Evolve(bestnetworks)
 	table.sort(self.Networks, function(a,b)
 		return a.Fitness >= b.Fitness
 	end)
-	table.insert(newbrains, tdeepcopy(Self.Networks[1]))
+	table.insert(newbrains, tdeepcopy(self.Networks[1]))
 	for i=1, #self.Networks-1, 2 do
 		local network1, network2 = bestnetworks[i], bestnetworks[i+2]
 		if not network2 then 
