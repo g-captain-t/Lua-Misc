@@ -170,7 +170,7 @@ end
 
 return tweens
 
-----[[
+--[[
 
 Example
 
