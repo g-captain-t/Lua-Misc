@@ -3,6 +3,7 @@
 
 local function clean(source) 
 	local lines = source:split("\n")
+	local n_lines = #lines
 	local new_source = "" -- avoid table concat
 	for i, line in ipairs (lines) do 
 		local multistring_opens = line:find("%[%[") or 0
@@ -12,7 +13,8 @@ local function clean(source)
 		if (multistring_complete == multistring_opens) then 
 			line = line:gsub("%s-$", "")
 		end
-		new_source = new_source..line
+		local newline = i == n_lines and "\n" or ""
+		new_source = new_source..line..newline
 	end
 	return new_source
 end
